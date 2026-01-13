@@ -7,19 +7,30 @@ import {
   View,
 } from 'react-native';
 import Meal from '../models/meal';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const MealItem = ({
+  id,
   title,
   imageUrl,
   duration,
   complexity,
   affordability,
 }: Meal) => {
+  const navigation =
+    useNavigation<
+      NativeStackNavigationProp<{ MealDetail: { mealId: string } }>
+    >();
+  const setMealItemHandler = () => {
+    navigation.navigate('MealDetail', { mealId: id });
+  };
   return (
     <View style={styles.mealItem}>
       <Pressable
         android_ripple={{ color: '#ccc', foreground: true }}
         style={({ pressed }) => [pressed && styles.buttonPressed]}
+        onPress={setMealItemHandler}
       >
         <View style={styles.innerContainer}>
           <View>
