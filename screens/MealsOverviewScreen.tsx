@@ -1,19 +1,30 @@
 import { RouteProp } from '@react-navigation/native';
-// import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, View, StyleSheet } from 'react-native';
-// import { MEALS } from '../data/dummy-data';
+import { FlatList, View, StyleSheet, ListRenderItemInfo } from 'react-native';
+import { MEALS } from '../data/dummy-data';
+import Meal from '../models/meal';
+import MealItem from '../components/MealItem';
 
 const MealsOverviewScreen = ({
-  // navigation,
   route,
 }: {
-  // navigation: NativeStackNavigationProp<any>;
-  route: RouteProp<{ MealsOverview: { categoryId: string } }>;
+  route?: RouteProp<{ MealsOverview: { categoryId: string } }>;
 }) => {
-  const categoryId = route.params.categoryId;
+  const categoryId = route?.params?.categoryId ?? '';
+
+  const displayedMeals = MEALS.filter(meal =>
+    meal.categoryIds.includes(categoryId),
+  );
+
+  const renderMealItem = (itemData: ListRenderItemInfo<Meal>) => {
+    return <MealItem {...itemData.item} />;
+  };
   return (
     <View style={styles.container}>
-      <Text>Meals Overview Screen - {categoryId}</Text>
+      <FlatList
+        data={displayedMeals}
+        keyExtractor={item => item.id}
+        renderItem={renderMealItem}
+      />
     </View>
   );
 };
