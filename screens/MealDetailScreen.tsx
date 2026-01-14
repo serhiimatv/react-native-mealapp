@@ -1,18 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  Button,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { MEALS } from '../data/dummy-data';
 import MealDetails from '../components/MealDetails';
 import Subtitle from '../components/MealDetail/Subtitle';
 import List from '../components/MealDetail/List';
 import { useLayoutEffect } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import IconButton from '../components/IconButton';
 
 const MealDetailScreen = ({
   route,
@@ -34,7 +28,13 @@ const MealDetailScreen = ({
       title: selectedMeal?.title,
       // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => {
-        return <Button title="Tap me" onPress={headerButtonPressHandler} />;
+        return (
+          <IconButton
+            icon="star"
+            color="white"
+            onPress={headerButtonPressHandler}
+          />
+        );
       },
     });
   }, [navigation, mealId, selectedMeal]);
