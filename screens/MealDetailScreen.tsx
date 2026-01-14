@@ -25,7 +25,6 @@ const MealDetailScreen = ({
 
   useLayoutEffect(() => {
     navigation?.setOptions({
-      title: selectedMeal?.title,
       // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => {
         return (
