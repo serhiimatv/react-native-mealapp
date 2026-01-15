@@ -4,10 +4,14 @@ import { MEALS } from '../data/dummy-data';
 import MealDetails from '../components/MealDetails';
 import Subtitle from '../components/MealDetail/Subtitle';
 import List from '../components/MealDetail/List';
-import { useContext, useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import IconButton from '../components/IconButton';
-import { FavoritesContext } from '../store/context/favorites-context';
+import {
+  useFavoritesDispatch,
+  useFavoritesSelector,
+} from '../hooks/reduxHooks';
+import { addFavorite, removeFavorite } from '../store/redux/favorites';
 
 const MealDetailScreen = ({
   route,
@@ -16,19 +20,25 @@ const MealDetailScreen = ({
   route?: RouteProp<{ MealDetail: { mealId: string } }>;
   navigation?: NativeStackNavigationProp<{ MealDetail: { mealId: string } }>;
 }) => {
-  const { ids, addFavorite, removeFavorite } = useContext(FavoritesContext);
-  const mealId = route?.params?.mealId ?? '';
+  const favoriteMealIds = useFavoritesSelector(
+    state => state.favoritesMeals.ids,
+  );
+  const dispatch = useFavoritesDispatch();
 
+  const mealId = route?.params?.mealId ?? '';
   const selectedMeal = MEALS.find(meal => meal.id === mealId);
 
-  const mealIsFavorites = useMemo(() => ids.includes(mealId), [ids, mealId]);
+  const mealIsFavorites = useMemo(
+    () => favoriteMealIds.includes(mealId),
+    [favoriteMealIds, mealId],
+  );
 
   useLayoutEffect(() => {
     const changeFavoriteStatusHandler = () => {
       if (mealIsFavorites) {
-        removeFavorite(mealId);
+        dispatch(removeFavorite({ mealId }));
       } else {
-        addFavorite(mealId);
+        dispatch(addFavorite({ mealId }));
       }
     };
 
@@ -44,14 +54,7 @@ const MealDetailScreen = ({
         );
       },
     });
-  }, [
-    navigation,
-    mealId,
-    selectedMeal,
-    mealIsFavorites,
-    addFavorite,
-    removeFavorite,
-  ]);
+  }, [navigation, mealId, selectedMeal, mealIsFavorites, dispatch]);
   return (
     <ScrollView style={styles.rootScreen}>
       <Image style={styles.image} source={{ uri: selectedMeal?.imageUrl }} />
