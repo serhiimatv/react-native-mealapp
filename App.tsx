@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MealsOverviewScreen from './screens/MealsOverviewScreen';
 import MealDetailScreen from './screens/MealDetailScreen';
 import DrawerNavigator from './navigators/DrawerNavigator';
+import FavoritesContextProvider from './store/context/favorites-context';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +13,9 @@ function App() {
   return (
     <>
       <StatusBar barStyle="light-content" />
-      <AppContent />
+      <FavoritesContextProvider>
+        <AppContent />
+      </FavoritesContextProvider>
     </>
   );
 }

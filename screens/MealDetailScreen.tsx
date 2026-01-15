@@ -4,9 +4,10 @@ import { MEALS } from '../data/dummy-data';
 import MealDetails from '../components/MealDetails';
 import Subtitle from '../components/MealDetail/Subtitle';
 import List from '../components/MealDetail/List';
-import { useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect, useMemo } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import IconButton from '../components/IconButton';
+import { FavoritesContext } from '../store/context/favorites-context';
 
 const MealDetailScreen = ({
   route,
@@ -15,28 +16,42 @@ const MealDetailScreen = ({
   route?: RouteProp<{ MealDetail: { mealId: string } }>;
   navigation?: NativeStackNavigationProp<{ MealDetail: { mealId: string } }>;
 }) => {
+  const { ids, addFavorite, removeFavorite } = useContext(FavoritesContext);
   const mealId = route?.params?.mealId ?? '';
 
   const selectedMeal = MEALS.find(meal => meal.id === mealId);
 
-  const headerButtonPressHandler = () => {
-    console.log('Button pressed!');
-  };
+  const mealIsFavorites = useMemo(() => ids.includes(mealId), [ids, mealId]);
 
   useLayoutEffect(() => {
+    const changeFavoriteStatusHandler = () => {
+      if (mealIsFavorites) {
+        removeFavorite(mealId);
+      } else {
+        addFavorite(mealId);
+      }
+    };
+
     navigation?.setOptions({
       // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => {
         return (
           <IconButton
-            icon="star"
+            icon={mealIsFavorites ? 'star' : 'star-outline'}
             color="white"
-            onPress={headerButtonPressHandler}
+            onPress={changeFavoriteStatusHandler}
           />
         );
       },
     });
-  }, [navigation, mealId, selectedMeal]);
+  }, [
+    navigation,
+    mealId,
+    selectedMeal,
+    mealIsFavorites,
+    addFavorite,
+    removeFavorite,
+  ]);
   return (
     <ScrollView style={styles.rootScreen}>
       <Image style={styles.image} source={{ uri: selectedMeal?.imageUrl }} />
