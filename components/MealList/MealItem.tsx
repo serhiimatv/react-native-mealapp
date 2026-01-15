@@ -6,10 +6,10 @@ import {
   Text,
   View,
 } from 'react-native';
-import Meal from '../models/meal';
+import Meal from '../../models/meal';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import MealDetails from './MealDetails';
+import MealDetails from '../MealDetails';
 
 const MealItem = ({
   id,

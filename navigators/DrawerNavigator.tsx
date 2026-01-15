@@ -39,7 +39,7 @@ const DrawerNavigator = () => {
         name="Favorites"
         component={FavoritesScreen}
         options={{
-          title: 'All Categories',
+          title: 'Your Favorites',
           // eslint-disable-next-line react/no-unstable-nested-components
           drawerIcon: ({ color, size }) => (
             <Ionicons name="star" color={color} size={size} />
